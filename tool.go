@@ -6,12 +6,20 @@ import (
 	"fmt"
 	"io"
 	"os"
+	"path/filepath"
 )
 
 // Copy 文件拷贝
 func Copy(source, target string) error {
 	if !IsExist(source) || IsExist(target) {
 		return errors.New(fmt.Sprintf("source: %s is not exist or target: %s is exist", source, target))
+	}
+	tDir := filepath.Dir(target)
+	if !IsExist(tDir) {
+		err := os.MkdirAll(tDir, os.ModePerm)
+		if err != nil {
+			return err
+		}
 	}
 	sf, err := os.Open(source)
 	if err != nil {
